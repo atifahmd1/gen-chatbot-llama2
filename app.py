@@ -1,71 +1,65 @@
 from flask import Flask, render_template, jsonify, request
-from src.helper import download_hugging_face_embeddings
-from langchain.vectorstores import Pinecone
-import pinecone
-from langchain.prompts import PromptTemplate
-from langchain.llms import CTransformers
-from langchain.chains import RetrievalQA
-from dotenv import load_dotenv
-from src.prompt import *
-import os
+from engine import chat_engine
+
+# input = "I am feeling left out."
+# print(input)
+# result = chat_engine.chat(input)
+# print("Response : ")
+# print(result)
 
 app = Flask(__name__)
 
-load_dotenv()
-
-PINECONE_API_KEY = os.environ.get('PINECONE_API_KEY')
-PINECONE_API_ENV = os.environ.get('PINECONE_API_ENV')
-
-
-embeddings = download_hugging_face_embeddings()
-
-#Initializing the Pinecone
-pinecone.init(api_key=PINECONE_API_KEY,
-              environment=PINECONE_API_ENV)
-
-index_name="medical-bot"
-
-#Loading the index
-docsearch=Pinecone.from_existing_index(index_name, embeddings)
-
-
-PROMPT=PromptTemplate(template=prompt_template, input_variables=["context", "question"])
-
-chain_type_kwargs={"prompt": PROMPT}
-
-llm=CTransformers(model="model/llama-2-7b-chat.ggmlv3.q4_0.bin",
-                  model_type="llama",
-                  config={'max_new_tokens':512,
-                          'temperature':0.8})
-
-
-qa=RetrievalQA.from_chain_type(
-    llm=llm, 
-    chain_type="stuff", 
-    retriever=docsearch.as_retriever(search_kwargs={'k': 2}),
-    return_source_documents=True, 
-    chain_type_kwargs=chain_type_kwargs)
-
-
-
 @app.route("/")
-def index():
+def Home():
     return render_template('chat.html')
 
 
 
 @app.route("/get", methods=["GET", "POST"])
 def chat():
-    msg = request.form["msg"]
-    input = msg
+    data = request.json  # Access JSON data
+    if not data or "msg" not in data:
+        return jsonify({"error": "No text found, please include 'msg' field in the JSON data"}), 400
+
+    input = data["msg"]
+    # input = msg
+    # print(type(input))
     print(input)
-    result=qa({"query": input})
-    print("Response : ", result["result"])
-    return str(result["result"])
+    result = chat_engine.chat(input)
+    print()
+    print(result.source_nodes)
+    print()
+    print("Response : ")
+    print(result)
+    return str(result), 200
+
+
+# import asyncio
+
+# async def chat_engine_async(input):
+#     # Asynchronous implementation of chat_engine.chat
+#     # (replace with your actual logic)
+#     await asyncio.sleep(1)  # Simulate processing time
+#     return "Processed response"
+
+# @app.route("/get", methods=["GET", "POST"])
+# async def chat():
+#     msg = request.form["msg"]
+#     input = msg
+#     print(input)
+
+#     loop = asyncio.get_event_loop()
+#     result = await loop.run_in_executor(None, chat_engine_async, input)  # Run chat_engine asynchronously
+
+#     print("Response : ")
+#     print(result)
+#     return str(result)
+
 
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port= 8080, debug= True)
+    app.run()
+    # app.run(host="0.0.0.0", port= 8080, debug= True)
 
 

@@ -5,15 +5,19 @@ body,html{
    background: -webkit-linear-gradient(to right, rgb(40, 59, 34), rgb(54, 60, 70), rgb(32, 32, 43));
 	background: linear-gradient(to right, rgb(38, 51, 61), rgb(50, 55, 65), rgb(33, 33, 78));
 }
+/* .container-fluid{
+	height: 100%;
+	width: 100%;
+} */
 
 .chat{
 	margin-top: auto;
 	margin-bottom: auto;
 }
 .card{
-	height: 500px;
+	height: 80vh;
 	border-radius: 15px !important;
-	background-color: rgba(0,0,0,0.4) !important;
+	/* background-color: rgba(0,0,0,0.4) !important; */
 }
 .contacts_body{
 	padding:  0.75rem 0 !important;
@@ -26,6 +30,7 @@ body,html{
 .card-header{
 	border-radius: 15px 15px 0 0 !important;
 	border-bottom: 0 !important;
+	background-color: rgba(0,0,0,0.4) !important;
 }
 .card-footer{
 border-radius: 0 0 15px 15px !important;
@@ -128,11 +133,11 @@ border-radius: 0 0 15px 15px !important;
 	margin-left: 15px;
 }
 .user_info span{
-	font-size: 20px;
+	font-size: 1.5rem;
 	color: white;
 }
 .user_info p{
-	font-size: 10px;
+	font-size: 1.2rem;
 	color: rgba(255,255,255,0.6);
 }
 .video_cam{
@@ -215,6 +220,29 @@ border-radius: 0 0 15px 15px !important;
 .action_menu ul li:hover{
 	cursor: pointer;
 	background-color: rgba(0,0,0,0.2);
+}
+.border{
+	margin: 10px 0;
+	padding: 10px;
+	border:1px solid rgba(255,255,255,0.1);
+	border-radius: 10px;
+}
+.msgs p{
+	font-size: 1.2rem;
+}
+.query{
+	background: #123456;
+	color: white;
+}
+.ans{
+	background-color: #456789;
+	color: white;
+}
+.icon{
+	background: #123456;
+	padding: 9px;
+	font-size: 1.9rem;
+	border-radius: 1rem;
 }
 @media(max-width: 576px){
 	.contacts_card{

@@ -1,3 +1,25 @@
+from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, ServiceContext
+from llama_index.core.prompts.prompts import SimpleInputPrompt
+
+documents=SimpleDirectoryReader("../data").load_data()
+# documents
+
+from llama_index.core import set_global_tokenizer
+from transformers import AutoTokenizer
+
+set_global_tokenizer(
+    AutoTokenizer.from_pretrained("NousResearch/Llama-2-7b-chat-hf").encode
+)
+
+from langchain.embeddings.huggingface import HuggingFaceEmbeddings
+from llama_index.core import ServiceContext
+from llama_index.embeddings.langchain import LangchainEmbedding
+
+embed_model=LangchainEmbedding(
+    HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2"))
+
+
+
 from src.helper import load_pdf, text_split, download_hugging_face_embeddings
 from langchain.vectorstores import Pinecone
 import pinecone
